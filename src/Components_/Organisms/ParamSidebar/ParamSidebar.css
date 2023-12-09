@@ -1,0 +1,46 @@
+.sidebar {
+  width: 0;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: #F3F3F3;
+  transition: width 0.2s ease;
+  overflow-x: hidden;
+  z-index: 1000;
+}
+
+.sidebar.open {
+  width: 72%;
+}
+
+.param-header {
+  width: 100%;
+  height: 10vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 30px;
+  background-color: #FFFFFF;
+  justify-content: space-between;
+}
+.param-header button {
+  background-color: transparent;
+  border: none;
+}
+
+.back-content,
+.back-content button {
+  display: flex;
+  align-items: center;
+}
+
+.centered-text {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.param-btn {
+  background-color: transparent;
+  border: none;
+}

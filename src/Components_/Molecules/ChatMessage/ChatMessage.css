@@ -1,0 +1,14 @@
+.chatMessage {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    width: fit-content;
+}
+
+.chatMessage .bubble {
+    height: fit-content;
+}
+
+.chatMessage.notCurrent {
+    flex-direction: row-reverse;
+}

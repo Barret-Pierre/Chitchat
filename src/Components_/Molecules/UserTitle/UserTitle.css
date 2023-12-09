@@ -1,0 +1,15 @@
+label[for="avatar"] {
+    color: #2253D1;
+    cursor: pointer;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+#avatar {
+    height: 0;
+    width: 0;
+    overflow: hidden;
+}
