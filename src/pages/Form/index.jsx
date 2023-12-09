@@ -51,6 +51,7 @@ function Form({ isSignInPage = false }) {
     }
 
     if (res.data.user) {
+      console.log("res.data.user", res.data.user);
       const logginUser = res.data.user;
       localStorage.setItem("token", logginUser.token);
       localStorage.setItem(
@@ -59,6 +60,7 @@ function Form({ isSignInPage = false }) {
           id: logginUser.id,
           full_name: logginUser.full_name,
           email: logginUser.email,
+          password: logginUser.password,
         })
       );
       navigate("/");
@@ -70,11 +72,9 @@ function Form({ isSignInPage = false }) {
   }, [data]);
   return (
     <div className="bg-white w-[600px] h-[700px] shadow-lg rounded-xl flex flex-col justify-center items-center">
-      <h2 className="text-4xl font-extrabold">
-        Welcome {isSignInPage && "back"}
-      </h2>
+      <h2 className="text-4xl font-extrabold">Bienvenue</h2>
       <p className="text-xl font-light mb-14">
-        {isSignInPage ? "Sign in to get explored" : "Sign up to get started"}
+        {isSignInPage ? "Connectez-vous" : "Inscrivez-vous pour continuer"}
       </p>
       {infos.isDisplay && (
         <p className="text-xl font-light mb-14">
@@ -88,9 +88,9 @@ function Form({ isSignInPage = false }) {
       >
         {!isSignInPage && (
           <Input
-            label="Full name"
+            label="Nom d'utilisateur"
             name="full_name"
-            placeholder="Enter your full name"
+            placeholder="Entrer votre nom d'utilisateur"
             className="mb-8 w-[75%]"
             value={data.full_name}
             onChange={(e) => setData({ ...data, full_name: e.target.value })}
@@ -100,28 +100,28 @@ function Form({ isSignInPage = false }) {
           label="Email"
           name="email"
           type="email"
-          placeholder="Enter your email"
+          placeholder="Entrez votre email"
           className="mb-8 w-[75%]"
           value={data.email}
           onChange={(e) => setData({ ...data, email: e.target.value })}
         />
         <Input
-          label="Password"
+          label="Mot de passe"
           name="password"
           type="password"
-          placeholder="Enter your password"
+          placeholder="Entrez votre mot de passe"
           className="mb-14 w-[75%]"
           value={data.password}
           onChange={(e) => setData({ ...data, password: e.target.value })}
         />
         <Button
-          label={isSignInPage ? "Sign in" : "Sign up"}
+          label={isSignInPage ? "Se connecter" : "S'inscrire'"}
           type="submit"
           className="mb-4 w-[75%]"
         />
       </form>
       <p>
-        {isSignInPage ? "Didn't have an account?" : "Already have an account?"}
+        {isSignInPage ? "Pas de compte?" : "Vous avez déjà un compte?"}
         <span
           className="text-primary cursor-pointer underline"
           onClick={() => {
@@ -129,7 +129,7 @@ function Form({ isSignInPage = false }) {
             navigate(isSignInPage ? "/sign_up" : "/sign_in");
           }}
         >
-          {isSignInPage ? "Sign up" : "Sign in"}
+          {isSignInPage ? "S'inscrire" : "Se connecter"}
         </span>
       </p>
     </div>
