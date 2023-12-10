@@ -32,7 +32,7 @@ const ParamForm = () => {
   const fetchUserData = useCallback(async () => {
     await axios({
       method: "get",
-      url: `http://localhost:4000/api/users/${user.id}`,
+      url: `${import.meta.env.VITE_URL_API}api/users/${user.id}`,
     })
       .then((res) => {
         console.log("res", res);
@@ -50,7 +50,7 @@ const ParamForm = () => {
   }, [user.id]);
 
   useEffect(() => {
-    setSocket(io("http://localhost:4080"));
+    setSocket(io(`${import.meta.env.VITE_URL_SOCKET}`));
     fetchUserData();
   }, [fetchUserData]);
 
@@ -127,7 +127,7 @@ const ParamForm = () => {
 
     await axios({
       method: "put",
-      url: `http://localhost:4000/api/users/${user.id}`,
+      url: `${import.meta.env.VITE_URL_API}api/users/${user.id}`,
       data: updatedUser,
     })
       .then((res) => {
@@ -158,7 +158,7 @@ const ParamForm = () => {
   const deleteUser = async () => {
     await axios({
       method: "delete",
-      url: `http://localhost:4000/api/users/${user.id}`,
+      url: `${import.meta.env.VITE_URL_API}api/users/${user.id}`,
     })
       .then((res) => {
         console.log("res", res);
