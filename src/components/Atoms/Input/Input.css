@@ -9,5 +9,8 @@
   font-weight: 400;
   color: #8c8c8c;
   background-color: white;
-  cursor: pointer;
+}
+
+.input:focus {
+  border: solid 1px #1476ff;
 }
