@@ -13,9 +13,11 @@ import { SidebarProvider } from "../../components/Organisms/ParamSidebar/ParamSi
 import ButtonSidebar from "../../components/Organisms/ParamSidebar/ButtonSidebar";
 import ParamSidebar from "../../components/Organisms/ParamSidebar/ParamSidebar";
 import "./Dashboard.css";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const userLoggin = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
   const [conversations, setConversations] = useState([]);
   const [currentConversation, setCurrentConversation] = useState(undefined);
   const [messages, setMessages] = useState([]);
@@ -38,14 +40,6 @@ function Dashboard() {
     setConversations([...data]);
   }, [userLoggin.id]);
 
-  // useEffect(() => {
-  //   socket?.on("getUsers", (users) => {
-  //     console.log("Active users", users);
-  //     setUsersWithoutSearch([...users]);
-  //     setUsers([...users]);
-  //   });
-  // }, [socket]);
-
   useEffect(() => {
     socket?.emit("addUser", userLoggin?.id);
     socket?.on("getUsers", (users) => {
@@ -62,6 +56,10 @@ function Dashboard() {
 
     socket?.on("getUsersWhenOneDeleted", (users) => {
       setActiveUsers([...users]);
+      fetchConversations();
+    });
+
+    socket?.on("getUsersWhenOneCreated", () => {
       fetchConversations();
     });
   }, [socket, userLoggin.id, fetchConversations]);
@@ -151,9 +149,8 @@ function Dashboard() {
   }
 
   function disconnectUser() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    window.location.reload();
+    localStorage.clear();
+    navigate("/sign_in", { replace: true });
   }
 
   function isUserConnected(id) {
