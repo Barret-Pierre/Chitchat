@@ -301,11 +301,14 @@ function Dashboard() {
                   }
                 })
               ) : (
-                <p className="text-2xl text-center">Pas de messages</p>
+                <p className="text-2xl text-center">
+                  Écrivez votre premier message à{" "}
+                  {currentConversation.contact.full_name}
+                </p>
               )
             ) : (
               <p className="text-2xl text-center">
-                Pas encore de conversations
+                Vous n'avez pas encore de contact
               </p>
             )}
           </div>
@@ -314,7 +317,7 @@ function Dashboard() {
           <div className="p-14 w-full bg-white flex items-center">
             <Textarea
               name="message"
-              placeholder="Type a message..."
+              placeholder="Tapez votre message..."
               className="w-[75%]"
               textareaClassName="p-4 ring-0 shadow-md"
               isRequired={false}
@@ -338,8 +341,9 @@ function Dashboard() {
           <div className="text-primary text-lg mb-6">Utilisateurs</div>
           <Input
             name="search"
-            placeholder="Find user"
+            placeholder="Rechechez un utilisateur"
             className="w-[100%]"
+            inputClassName="p-3"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />

@@ -6,6 +6,7 @@ import axios from "axios";
 import { io } from "socket.io-client";
 import "./ParamForm.css";
 import { useNavigate } from "react-router-dom";
+import Modal from "../../Modal";
 
 const ParamForm = () => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const ParamForm = () => {
   const [socket, setSocket] = useState(null);
   const [errors, setErrors] = useState({});
   const [isUpdated, setIsUpdated] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     setSocket(io("http://localhost:4080"));
@@ -130,6 +132,11 @@ const ParamForm = () => {
 
   return (
     <form noValidate onSubmit={handleSubmit}>
+      <Modal
+        isOpen={modalOpen}
+        onDelete={() => deleteUser()}
+        onCancel={() => setModalOpen(false)}
+      />
       <div className="containerDiv">
         <div className="inputContainer">
           <div>
@@ -195,7 +202,7 @@ const ParamForm = () => {
         </div>
         <div className={"buttonDiv"}>
           <Button type="submit" text="Enregistrer" onClick={updateUser} />
-          <p className="button__delete" onClick={deleteUser}>
+          <p className="button__delete" onClick={() => setModalOpen(true)}>
             Supprimer
           </p>
           {isUpdated && (
