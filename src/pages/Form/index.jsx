@@ -4,13 +4,19 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { io } from "socket.io-client";
 
 Form.propTypes = {
   isSignInPage: PropTypes.bool,
 };
 
 function Form({ isSignInPage = false }) {
+  const [socket, setSocket] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setSocket(io("http://localhost:4080"));
+  }, []);
 
   const [data, setData] = useState({
     ...(!isSignInPage && { full_name: "" }),
@@ -40,13 +46,14 @@ function Form({ isSignInPage = false }) {
     }).catch((err) => {
       const data = err.response.data;
       setInfos({
-        ...infos,
+        succes: "",
         isDisplay: true,
         error: data.error || "Oups something went wrong",
       });
     });
 
     if (res.data && !isSignInPage) {
+      socket.emit("userCreated");
       setInfos({ ...infos, isDisplay: true, success: res.data.success });
     }
 
@@ -115,13 +122,13 @@ function Form({ isSignInPage = false }) {
           onChange={(e) => setData({ ...data, password: e.target.value })}
         />
         <Button
-          label={isSignInPage ? "Se connecter" : "S'inscrire'"}
+          label={isSignInPage ? "Se connecter" : "S'inscrire"}
           type="submit"
           className="mb-4 w-[75%]"
         />
       </form>
       <p>
-        {isSignInPage ? "Pas de compte?" : "Vous avez déjà un compte?"}
+        {isSignInPage ? "Pas de compte? " : "Vous avez déjà un compte? "}
         <span
           className="text-primary cursor-pointer underline"
           onClick={() => {
