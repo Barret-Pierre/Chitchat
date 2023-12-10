@@ -16,7 +16,7 @@ function Form({ isSignInPage = false }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setSocket(io("http://localhost:4080"));
+    setSocket(io(`${import.meta.env.VITE_URL_SOCKET}`));
   }, []);
 
   const [data, setData] = useState({
@@ -40,7 +40,7 @@ function Form({ isSignInPage = false }) {
     resetInfos();
     const res = await axios({
       method: "post",
-      url: `http://localhost:4000/api/users/${
+      url: `${import.meta.env.VITE_URL_API}api/users/${
         isSignInPage ? "sign-in" : "sign-up"
       }`,
       data,
