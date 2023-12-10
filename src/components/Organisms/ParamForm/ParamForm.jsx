@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Input from "../../Atoms/Input/Input";
 import Button from "../../Atoms/Button/Button";
 import Text from "../../Atoms/Text/Text";
@@ -7,12 +7,13 @@ import { io } from "socket.io-client";
 import "./ParamForm.css";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../Modal";
+import Alert from "../../Alert";
 
 const ParamForm = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [formData, setFormData] = useState({
-    name: "",
+    full_name: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -22,9 +23,36 @@ const ParamForm = () => {
   const [isUpdated, setIsUpdated] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
+  const [infos, setInfos] = useState({
+    isDisplay: false,
+    success: "",
+    error: "",
+  });
+
+  const fetchUserData = useCallback(async () => {
+    await axios({
+      method: "get",
+      url: `http://localhost:4000/api/users/${user.id}`,
+    })
+      .then((res) => {
+        console.log("res", res);
+        setFormData((prev) => {
+          return {
+            ...prev,
+            full_name: res.data.full_name,
+            email: res.data.email,
+          };
+        });
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  }, [user.id]);
+
   useEffect(() => {
     setSocket(io("http://localhost:4080"));
-  }, []);
+    fetchUserData();
+  }, [fetchUserData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -104,14 +132,27 @@ const ParamForm = () => {
     })
       .then((res) => {
         console.log("res", res);
-        localStorage.setItem("user", JSON.stringify(updatedUser));
+        socket?.emit("userCreatedOrUpdate");
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            id: updatedUser.id,
+            full_name: updatedUser.full_name,
+            email: updatedUser.email,
+          })
+        );
         setIsUpdated(true);
         window.location.reload();
       })
       .catch((err) => {
+        const data = err.response.data;
+        setInfos({
+          succes: "",
+          isDisplay: true,
+          error: data.error || "Aïe tu ne peux pas faire ça",
+        });
         console.log("err", err);
       });
-    console.log("Utilisateur mis à jour :", updatedUser);
   };
 
   const deleteUser = async () => {
@@ -137,7 +178,14 @@ const ParamForm = () => {
         onDelete={() => deleteUser()}
         onCancel={() => setModalOpen(false)}
       />
+
       <div className="containerDiv">
+        <Alert
+          content={infos.success ? infos.success : infos.error}
+          type={infos.success && "success"}
+          isOpen={infos.isDisplay}
+          className="w-[80%] mb-8 self-center"
+        />
         <div className="inputContainer">
           <div>
             <Input
