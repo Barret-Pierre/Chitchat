@@ -197,7 +197,7 @@ function Dashboard() {
               <ParamSidebar />
             </SidebarProvider>
             <button
-              className="buttonDisconnect"
+              className="buttonDisconnect hover:scale-110 mr-8 transition-all ease-out delay-30 "
               onClick={() => {
                 disconnectUser(userLoggin.id);
               }}
@@ -345,7 +345,7 @@ function Dashboard() {
           <div className="text-primary text-lg mb-6">Utilisateurs</div>
           <Input
             name="search"
-            placeholder="Rechechez un utilisateur"
+            placeholder="Rechechez un utilisateur par email"
             className="w-[100%]"
             inputClassName="p-3"
             value={search}
