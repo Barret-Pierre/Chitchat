@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
+import Alert from "../../components/Alert";
 
 Form.propTypes = {
   isSignInPage: PropTypes.bool,
@@ -83,11 +84,13 @@ function Form({ isSignInPage = false }) {
       <p className="text-xl font-light mb-14">
         {isSignInPage ? "Connectez-vous" : "Inscrivez-vous pour continuer"}
       </p>
-      {infos.isDisplay && (
-        <p className="text-xl font-light mb-14">
-          {infos.success ? infos.success : infos.error}
-        </p>
-      )}
+
+      <Alert
+        content={infos.success ? infos.success : infos.error}
+        type={infos.success && "success"}
+        isOpen={infos.isDisplay}
+        className="w-[75%] mb-8"
+      />
 
       <form
         className="flex flex-col items-center min-w-full"
