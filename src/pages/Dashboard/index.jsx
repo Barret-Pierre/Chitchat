@@ -3,11 +3,16 @@ import Call from "../../assets/call.svg";
 import Send from "../../assets/send.svg";
 import Add from "../../assets/add.svg";
 import Textarea from "../../components/Textarea";
+import StatusIndicator from "../../components/StatusIndicator";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { formatDate } from "../../helpers";
 import Input from "../../components/Input";
 import { io } from "socket.io-client";
+import { SidebarProvider } from "../../components/Organisms/ParamSidebar/ParamSidebarContext";
+import ButtonSidebar from "../../components/Organisms/ParamSidebar/ButtonSidebar";
+import ParamSidebar from "../../components/Organisms/ParamSidebar/ParamSidebar";
+import "./Dashboard.css";
 
 function Dashboard() {
   const userLoggin = JSON.parse(localStorage.getItem("user"));
@@ -19,6 +24,7 @@ function Dashboard() {
   const [usersWithoutSearch, setUsersWithoutSearch] = useState([]);
   const [search, setSearch] = useState("");
   const [socket, setSocket] = useState(null);
+  const [activeUsers, setActiveUsers] = useState([]);
 
   useEffect(() => {
     setSocket(io("http://localhost:4080"));
@@ -32,10 +38,19 @@ function Dashboard() {
     setConversations([...data]);
   }, [userLoggin.id]);
 
+  // useEffect(() => {
+  //   socket?.on("getUsers", (users) => {
+  //     console.log("Active users", users);
+  //     setUsersWithoutSearch([...users]);
+  //     setUsers([...users]);
+  //   });
+  // }, [socket]);
+
   useEffect(() => {
     socket?.emit("addUser", userLoggin?.id);
     socket?.on("getUsers", (users) => {
       console.log("Active users", users);
+      setActiveUsers([...users]);
     });
     socket?.on("getMessage", (data) => {
       console.log("Data Message >>>>", data);
@@ -124,6 +139,20 @@ function Dashboard() {
       });
   }
 
+  function disconnectUser() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.reload();
+  }
+
+  function isUserConnected(id) {
+    console.log(
+      "ConnectedFunction",
+      activeUsers.find((user) => user.userId === id) ? true : false
+    );
+    return activeUsers.find((user) => user.userId === id) ? true : false;
+  }
+
   useEffect(() => {
     console.log("Users >>>>", users);
   }, [users]);
@@ -154,6 +183,18 @@ function Dashboard() {
           <div className="ml-4">
             <h3 className="text-2xl">{userLoggin.full_name}</h3>
             <p className="text-lg font-light">{userLoggin.email}</p>
+            <SidebarProvider>
+              <ButtonSidebar />
+              <ParamSidebar />
+            </SidebarProvider>
+            <button
+              className="buttonDisconnect"
+              onClick={() => {
+                disconnectUser(userLoggin.id);
+              }}
+            >
+              Déconnexion
+            </button>
           </div>
         </div>
         <hr />
@@ -161,6 +202,7 @@ function Dashboard() {
           <div className="text-primary text-lg">Contacts</div>
           <div>
             {conversations.map(({ id, contact, img }) => {
+              const isConnected = isUserConnected(contact.id);
               return (
                 <div
                   className="flex items-center py-8 border-b border-b-gray-300 "
@@ -173,13 +215,15 @@ function Dashboard() {
                       setCurrentConversation({ id, contact });
                     }}
                   >
-                    <div className="border border-primary p-[2px] rounded-full">
+                    <div className="relative me-4">
                       <img
                         src={img || Avatar}
                         alt="Avatar icon"
                         width={60}
                         height={60}
+                        className="rounded-full"
                       />
+                      <StatusIndicator isConnected={isConnected} />
                     </div>
                     <div className="ml-6">
                       <h3 className="text-lg font-semibold">
@@ -249,10 +293,12 @@ function Dashboard() {
                   }
                 })
               ) : (
-                <p className="text-2xl text-center">No Message</p>
+                <p className="text-2xl text-center">Pas de messages</p>
               )
             ) : (
-              <p className="text-2xl text-center">No conversation selected</p>
+              <p className="text-2xl text-center">
+                Pas encore de conversations
+              </p>
             )}
           </div>
         </div>
@@ -281,7 +327,7 @@ function Dashboard() {
       </div>
       <div className="w-[25%] h-screen bg-white overflow-scroll">
         <div className="mx-14 mt-10">
-          <div className="text-primary text-lg mb-6">Users</div>
+          <div className="text-primary text-lg mb-6">Utilisateurs</div>
           <Input
             name="search"
             placeholder="Find user"
