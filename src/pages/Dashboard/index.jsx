@@ -59,6 +59,11 @@ function Dashboard() {
         return [...prev, data];
       });
     });
+
+    socket?.on("getUsersWhenOneDeleted", (users) => {
+      setActiveUsers([...users]);
+      fetchConversations();
+    });
   }, [socket, userLoggin.id, fetchConversations]);
 
   useEffect(() => {
