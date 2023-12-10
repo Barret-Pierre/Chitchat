@@ -59,7 +59,7 @@ function Dashboard() {
       fetchConversations();
     });
 
-    socket?.on("getUsersWhenOneCreated", () => {
+    socket?.on("getUsersWhenOneCreatedOrUpdate", () => {
       fetchConversations();
     });
   }, [socket, userLoggin.id, fetchConversations]);
