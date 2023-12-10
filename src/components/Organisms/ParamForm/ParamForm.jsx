@@ -19,7 +19,6 @@ const ParamForm = () => {
   const [socket, setSocket] = useState(null);
   const [errors, setErrors] = useState({});
   const [isUpdated, setIsUpdated] = useState(false);
-  const [hasDeleted, setHasDeleted] = useState(false);
 
   useEffect(() => {
     setSocket(io("http://localhost:4080"));
@@ -32,13 +31,6 @@ const ParamForm = () => {
       [name]: value,
     }));
   };
-
-  // useEffect(() => {
-  //   if (hasDeleted) {
-  //     console.log("hasDeleted emitted");
-  //     socket?.emit("userDeleted");
-  //   }
-  // }, [socket, hasDeleted]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -127,12 +119,9 @@ const ParamForm = () => {
     })
       .then((res) => {
         console.log("res", res);
-        setHasDeleted(true);
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        navigate("/sign_up");
-        window.location.reload();
-        console.log("Utilisateur supprimé");
+        socket.emit("userDeleted");
+        localStorage.clear();
+        navigate("/sign_up", { replace: true });
       })
       .catch((err) => {
         console.log("err", err);
