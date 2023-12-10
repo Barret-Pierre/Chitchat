@@ -308,7 +308,7 @@ function Dashboard() {
               )
             ) : (
               <p className="text-2xl text-center">
-                Vous n'avez pas encore de contact
+                Vous n&apos;avez pas encore de contact
               </p>
             )}
           </div>

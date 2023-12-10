@@ -56,6 +56,10 @@ function Form({ isSignInPage = false }) {
     if (res.data && !isSignInPage) {
       socket.emit("userCreated");
       setInfos({ ...infos, isDisplay: true, success: res.data.success });
+      setTimeout(() => {
+        navigate("/sign_in");
+        setInfos({ isDisplay: false, success: "", error: "" });
+      }, "1500");
     }
 
     if (res.data.user) {
