@@ -124,6 +124,12 @@ function Dashboard() {
     })
       .then(({ data }) => {
         console.log(data);
+        if (currentConversation.id == "new") {
+          setCurrentConversation({
+            id: data.message.conversation_id,
+            contact: { ...currentConversation.contact },
+          });
+        }
         socket.emit("sendMessage", {
           id: data.message.id,
           sender_id: userLoggin.id,
