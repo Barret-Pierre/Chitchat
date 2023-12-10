@@ -1,5 +1,5 @@
-import React from 'react';
-import './Input.css';
+import React from "react";
+import "./Input.css";
 
 const Input = ({ type, placeholder, isRequired, value, onChange, name }) => {
   const handleInputChange = (e) => {
@@ -19,7 +19,7 @@ const Input = ({ type, placeholder, isRequired, value, onChange, name }) => {
       className={`input input__${type}`}
       placeholder={placeholder}
       required={isRequired}
-      value={value}
+      value={value || ""}
       onChange={handleInputChange}
       name={name}
     />

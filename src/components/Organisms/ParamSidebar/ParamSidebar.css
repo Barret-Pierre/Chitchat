@@ -4,7 +4,7 @@
   position: fixed;
   top: 0;
   right: 0;
-  background-color: #f3f3f3;
+  background-color: #f3f3f3 !important;
   transition: width 0.2s ease;
   overflow-x: hidden;
   z-index: 1000;
@@ -12,6 +12,7 @@
 
 .sidebar.open {
   width: 75%;
+  background-color: #f3f3f3 !important;
 }
 
 .param-header {
